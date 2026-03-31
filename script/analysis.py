@@ -4,14 +4,21 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 from scipy.signal import savgol_filter
 from sklearn.decomposition import PCA
 
 # -------------------------------
 # 1. Chargement et aperçu du dataset
 # -------------------------------
-# Remplacer le chemin si nécessaire
-data_path = 'C:/Users/alex2/OneDrive/Documents/GitHub/DataManagerUE3_ALCOPI/Analysis/combined_data.csv'
+# On utilise pathlib pour un chemin relatif robuste qui fonctionnera sur Mac, Windows et GitHub
+current_dir = Path(__file__).resolve().parent
+project_root = current_dir.parent
+data_path = project_root / 'data' / 'combined_data.csv'
+
+if not data_path.exists():
+    raise FileNotFoundError(f"Le fichier de données est introuvable à : {data_path}")
+
 df = pd.read_csv(data_path)
 
 print("Aperçu du dataset :")
@@ -28,9 +35,9 @@ print(df.isnull().sum())
 # -------------------------------
 # 2. Identification des colonnes spectrales et de la colonne d'espèce
 # -------------------------------
-# On suppose que la colonne d'espèce s'appelle 'species'. 
+# On suppose que la colonne d'espèce s'appelle 'class'. 
 # Si ce n'est pas le cas, modifiez la variable ci-dessous.
-species_col = 'species'
+species_col = 'class'
 if species_col not in df.columns:
     print(f"La colonne '{species_col}' n'a pas été trouvée. " \
           "Veuillez modifier le nom de la colonne correspondant aux espèces.")
